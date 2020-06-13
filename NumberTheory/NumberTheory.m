@@ -5,7 +5,6 @@
 BeginPackage["NumberTheory`"]
 
 
-
 (* UTILITIES *)
 SetAttributes[tex, HoldFirst]
 tex[exp_] := TeXForm[HoldForm[exp]]
@@ -33,20 +32,33 @@ primeProduct[n_, fun_] :=
 jordanTotient[n_Integer?Positive, k_ : 1] := 
   DivisorSum[n, #^k*MoebiusMu[n/#] &];
 
-eulerPhi[k_, n_] := 
- DirichletConvolve[faulhaber[k, j], MoebiusMu[j] j^k, j, n]
-eulerPhi[0, n] := EulerPhi[n]
-eulerPhi[n_] := eulerPhi[0, n]
 
 
 
 (* Exported symbols added here with SymbolName::usage *) 
+
+nCollatz::usage = 
+			"nCollatz[n] gives a list of the iterates in the 3n+1 problem,
+    	     starting from n. The conjecture is that this sequence always
+             terminates."
+
+nEulerPhi::usage = 
+			"nEulerPhi[k,n] returns the sum of the kth powers of the numbers
+			<n and relatively prime to n. "
+
 
 
 
 Begin["`Private`"]
 (* Implementation of the package *)
 
+nCollatz[1] := {1}
+nCollatz[n_Integer]  := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
+nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
+
+nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[faulhaber[k, j], MoebiusMu[j] j^k, j, n]
+nEulerPhi[0, n] := EulerPhi[n]
+nEulerPhi[n_Integer] := nEulerPhi[0, n]
 
 End[]
 
