@@ -20,9 +20,6 @@ tr := Trace
 (* INITIAL FROM NotesANT *)
 primeQpos[n_] := If[PrimeQ[n] && n > 0, True, False]
 
-faulhaber[m_, n_] := 
- Simplify[1/(m + 1) (BernoulliB[m + 1, n + 1] - BernoulliB[m + 1, 1])]
-
 divisorProduct[n_, fun_] := 
  Apply[Times, Map[fun[#] &, Divisors[n]]]
 
@@ -34,7 +31,6 @@ jordanTotient[n_Integer?Positive, k_ : 1] :=
 
 
 
-
 (* Exported symbols added here with SymbolName::usage *) 
 
 nCollatz::usage = 
@@ -42,10 +38,13 @@ nCollatz::usage =
     	     starting from n. The conjecture is that this sequence always
              terminates."
 
+nFaulhaber::usage =
+			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
+			<n"
+
 nEulerPhi::usage = 
 			"nEulerPhi[k,n] returns the sum of the kth powers of the numbers
 			<n and relatively prime to n. "
-
 
 
 
@@ -55,6 +54,8 @@ Begin["`Private`"]
 nCollatz[1] := {1}
 nCollatz[n_Integer]  := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
 nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
+
+nFaulhaber[m_, n_] := Simplify[1/(m + 1) (BernoulliB[m + 1, n + 1] - BernoulliB[m + 1, 1])]
 
 nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[faulhaber[k, j], MoebiusMu[j] j^k, j, n]
 nEulerPhi[0, n] := EulerPhi[n]
