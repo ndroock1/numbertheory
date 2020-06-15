@@ -71,6 +71,9 @@ nPrimeProduct::usage =
 nDirichletProduct::usage =
 			"nDirichletProduct[f_,g_] returns the Dirichlet Product of the
 			functions f and g : f*g."
+
+nDirichletInverse::usage =
+			"nDirichletInverse[f_] returns the function g such that (f*g)=I."
 			
 nDirichletPower::usage=
 			"nDirichletPower[f_,k_] returns f^(k), f to the kth Dirichlet 
@@ -120,6 +123,9 @@ nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
 nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
 
 nDirichletProduct[fn_, gn_] := Function[a, DivisorSum[a, fn[#] gn[a/#] &]]
+
+nDirichletInverse[f_][1] := 1
+nDirichletInverse[f_][n_] := -(1/f[1]) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
 
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
 nDirichletPower[f_,k_]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]]
