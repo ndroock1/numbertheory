@@ -60,6 +60,10 @@ nEulerPhi::usage =
 nDivisors::usage = 
 			"nDivisors[n,k] returns the divisors of n such that d^k/n"
 
+nDirichletPower::usage=
+			"nDirichletPower[f_,k_] returns f^(k), f to the kth Dirichlet 
+			power"
+
 Begin["`Private`"]
 (* Implementation of the package *)
 nz[n_] := (-1)^(n - 1) Floor[n/2]
@@ -94,6 +98,9 @@ nEulerPhi[n_Integer] := nEulerPhi[0, n]
 nDivisors[n_,k_] := Divisors[Apply[Times, Map[#[[1]]^Floor[#[[2]]/k] &, FactorInteger[n]]]]
 nDivisors[n_]:= nDivisors[n,1]
 
+diriProd[fn_, gn_] := Function[a, DivisorSum[a, fn[#] gn[a/#] &]]
+nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
+nDirichletPower[f_,k_]:=Fold[diriProd, f, ConstantArray[f, k - 1]]
 End[]
 
 EndPackage[]
