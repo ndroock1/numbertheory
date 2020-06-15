@@ -20,12 +20,6 @@ tr := Trace
 (* INITIAL FROM NotesANT *)
 primeQpos[n_] := If[PrimeQ[n] && n > 0, True, False]
 
-divisorProduct[n_, fun_] := 
- Apply[Times, Map[fun[#] &, Divisors[n]]]
-
-primeProduct[n_, fun_] := 
- Apply[Times, Map[fun[#] &, FactorInteger[n][[All, 1]]]]
-
 jordanTotient[n_Integer?Positive, k_ : 1] := 
   DivisorSum[n, #^k*MoebiusMu[n/#] &];
 
@@ -51,18 +45,38 @@ nCollatz::usage =
 
 nFaulhaber::usage =
 			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
-			<n"
+			<n."
 
 nEulerPhi::usage = 
 			"nEulerPhi[k,n] returns the sum of the kth powers of the numbers
 			<n and relatively prime to n. "
 
 nDivisors::usage = 
-			"nDivisors[n,k] returns the divisors of n such that d^k/n"
+			"nDivisors[n,k] returns the divisors of n such that d^k/n."
 
+nMoebiusMu::usage =
+			"nMoebiusMu[k,n] vanishes if n is divisible by the (k+1)st power
+			of some prime; otherwise nMoebiusMu[k,n]=1 unless the prime
+			factorization of n contains the k-th powers of exactly r distinct
+			primes, in which case nMoebiusMu[k,n]=(-1)^r."
+
+nDivisorProduct::usage =
+			"nDivisorProduct[n_, f_] represents the product of f[d] for all 
+			d that divide n."
+
+nPrimeProduct::usage =
+			"nPrimeProduct[n_, f_] represents the product of f[p] for all 
+			p that divide n."
+
+nDirichletProduct::usage =
+			"nDirichletProduct[f_,g_] returns the Dirichlet Product of the
+			functions f and g : f*g."
+			
 nDirichletPower::usage=
 			"nDirichletPower[f_,k_] returns f^(k), f to the kth Dirichlet 
-			power"
+			power."
+
+
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -91,16 +105,24 @@ nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
 
 nFaulhaber[m_Integer, n_Integer] := Simplify[1/(m + 1) (BernoulliB[m + 1, n + 1] - BernoulliB[m + 1, 1])]
 
-nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[faulhaber[k, j], MoebiusMu[j] j^k, j, n]
+nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[nFaulhaber[k, j], MoebiusMu[j] j^k, j, n]
 nEulerPhi[0, n] := EulerPhi[n]
 nEulerPhi[n_Integer] := nEulerPhi[0, n]
 
 nDivisors[n_,k_] := Divisors[Apply[Times, Map[#[[1]]^Floor[#[[2]]/k] &, FactorInteger[n]]]]
 nDivisors[n_]:= nDivisors[n,1]
 
-diriProd[fn_, gn_] := Function[a, DivisorSum[a, fn[#] gn[a/#] &]]
+nMoebiusMu[n_, 1] := MoebiusMu[n]
+nMoebiusMu[n_, k_] := Sum[nMoebiusMu[n/d^k, k - 1] nMoebiusMu[n/d, k - 1], {d, nDivisors[n, k]}]
+ 
+nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
+
+nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
+
+nDirichletProduct[fn_, gn_] := Function[a, DivisorSum[a, fn[#] gn[a/#] &]]
+
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
-nDirichletPower[f_,k_]:=Fold[diriProd, f, ConstantArray[f, k - 1]]
+nDirichletPower[f_,k_]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]]
 End[]
 
 EndPackage[]
