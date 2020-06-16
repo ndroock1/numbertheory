@@ -79,7 +79,8 @@ nDirichletPower::usage=
 			"nDirichletPower[f_,k_] returns f^(k), f to the kth Dirichlet 
 			power."
 
-
+nDirichletRoot::usage=
+			"nDirichletRoot[g_,m_] returns g^(1/m)."
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -122,13 +123,18 @@ nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
 
 nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
 
-nDirichletProduct[fn_, gn_] := Function[a, DivisorSum[a, fn[#] gn[a/#] &]]
+nDirichletProduct[f_, g_] := Function[a, DivisorSum[a, f[#] g[a/#] &]]
 
 nDirichletInverse[f_][1] := 1
 nDirichletInverse[f_][n_] := -(1/f[1]) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
 
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
-nDirichletPower[f_,k_]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]]
+nDirichletPower[f_,k_Integer]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]] /; (k >= 0)
+nDirichletPower[f_,k_Integer]:=nDirichletInverse[nDirichletPower[f,-k]] /; (k < 0)
+
+nDirichletRoot[g_,m_][1] := g[1]
+nDirichletRoot[g_,m_][n_] := 1/m ( g[n] - (Apply[Plus, Map[nDirichletPower[nDirichletRoot[g,m],m][#] &, Most[Divisors[n]]]]) )
+
 End[]
 
 EndPackage[]
