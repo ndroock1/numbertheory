@@ -47,8 +47,11 @@ nFaulhaber::usage =
 			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
 			<n."
 
+nCore::usage =
+			"nCore[n] returns the product of the distinct prime divisors of n"
+
 nEulerPhi::usage = 
-			"nEulerPhi[k,n] returns the sum of the kth powers of the numbers
+			"nEulerPhi[k,n] returns the sum of the k-th powers of the numbers
 			<n and relatively prime to n. "
 
 nDivisors::usage = 
@@ -82,6 +85,14 @@ nDirichletPower::usage=
 nDirichletRoot::usage=
 			"nDirichletRoot[g_,m_] returns g^(1/m)."
 
+nDirichletCoefficient::usage=
+			"nDirichletCoefficient[fun_, m_] returns the m-th coefficient of D[f[n],n^s] where
+			 fun is its corresponding Zeta expression."
+
+nDirichletCoefficientList::usage=
+			"nDirichletCoefficientList[fun_, m_] returns the first m coefficients of D[f[n],n^s] where
+			 fun is its corresponding Zeta expression."
+
 Begin["`Private`"]
 (* Implementation of the package *)
 nz[n_] := (-1)^(n - 1) Floor[n/2]
@@ -107,6 +118,8 @@ nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
 nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
 
+nCore[n_Integer] := Apply[Times, FactorInteger[n][[All, 1]]]
+
 nFaulhaber[m_Integer, n_Integer] := Simplify[1/(m + 1) (BernoulliB[m + 1, n + 1] - BernoulliB[m + 1, 1])]
 
 nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[nFaulhaber[k, j], MoebiusMu[j] j^k, j, n]
@@ -118,7 +131,7 @@ nDivisors[n_]:= nDivisors[n,1]
 
 nMoebiusMu[n_, 1] := MoebiusMu[n]
 nMoebiusMu[n_, k_] := Sum[nMoebiusMu[n/d^k, k - 1] nMoebiusMu[n/d, k - 1], {d, nDivisors[n, k]}]
- 
+
 nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
 
 nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
@@ -131,9 +144,34 @@ nDirichletInverse[f_][n_] := -(1/f[1]) (Apply[Plus, Map[f[n/#] nDirichletInverse
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
 nDirichletPower[f_,k_Integer]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]] /; (k >= 0)
 nDirichletPower[f_,k_Integer]:=nDirichletInverse[nDirichletPower[f,-k]] /; (k < 0)
+nDirichletPower[f_,k_Rational][n_]:=nDirichletRoot[nDirichletPower[f,Numerator[k]],Denominator[k]][n] /; ( k > 0)
 
 nDirichletRoot[g_,m_][1] := g[1]
-nDirichletRoot[g_,m_][n_] := 1/m ( g[n] - (Apply[Plus, Map[nDirichletPower[nDirichletRoot[g,m],m][#] &, Most[Divisors[n]]]]) )
+nDirichletRoot[g_,m_][n_] := 
+	1/m ( g[n] - Total[Map[Apply[Times, #] &, Map[nDirichletRoot[g,m][#] &, 
+	Select[Tuples[Most[Divisors[n]], m], Apply[Times, #] == n &], {2}]]] )
+
+nDirichletCoefficient[fun_, m_] := Module[{a, f},
+  f[x_] := fun[x];
+  a[1] = Limit[f[x], x -> \[Infinity]];
+  a[n_] := 
+   a[n] = Limit[
+     Series[n^
+         x (f[x] - Sum[a[k] k^-x, {k, 1, n - 1}]), {x, \[Infinity], 
+        n}] // Normal, x -> \[Infinity]];
+  a[m]
+  ]
+
+nDirichletCoefficientList[fun_, m_] := Module[{a, f},
+  f[x_] := fun[x];
+  a[1] = Limit[f[x], x -> \[Infinity]];
+  a[n_] := 
+   a[n] = Limit[
+     Series[n^
+         x (f[x] - Sum[a[k] k^-x, {k, 1, n - 1}]), {x, \[Infinity], 
+        n}] // Normal, x -> \[Infinity]];
+  Table[{n, a[n]}, {n, 1, m}]
+  ]
 
 End[]
 
