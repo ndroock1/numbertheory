@@ -5,7 +5,7 @@
 BeginPackage["NumberTheory`"]
 
 
-(* UTILITIES *)
+(* UTILITIES INITIAL FROM NotesANT *)
 SetAttributes[tex, HoldFirst]
 tex[exp_] := TeXForm[HoldForm[exp]]
 nc[n_] := N[n] // Chop
@@ -14,14 +14,7 @@ tf := TableForm
 mf := MatrixForm
 df := Defer
 tr := Trace
-
-
-
-(* INITIAL FROM NotesANT *)
 primeQpos[n_] := If[PrimeQ[n] && n > 0, True, False]
-
-jordanTotient[n_Integer?Positive, k_ : 1] := 
-  DivisorSum[n, #^k*MoebiusMu[n/#] &];
 
 
 
@@ -53,6 +46,9 @@ nCore::usage =
 nEulerPhi::usage = 
 			"nEulerPhi[k,n] returns the sum of the k-th powers of the numbers
 			<n and relatively prime to n. "
+
+nJordanTotient::usage =
+			"nJordanTotient[k,n] returns the Jordan Totient function."
 
 nDivisors::usage = 
 			"nDivisors[n,k] returns the divisors of n such that d^k/n."
@@ -123,8 +119,11 @@ nCore[n_Integer] := Apply[Times, FactorInteger[n][[All, 1]]]
 nFaulhaber[m_Integer, n_Integer] := Simplify[1/(m + 1) (BernoulliB[m + 1, n + 1] - BernoulliB[m + 1, 1])]
 
 nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[nFaulhaber[k, j], MoebiusMu[j] j^k, j, n]
-nEulerPhi[0, n] := EulerPhi[n]
-nEulerPhi[n_Integer] := nEulerPhi[0, n]
+nEulerPhi[0, n_Integer] := EulerPhi[n]
+nEulerPhi[n_Integer] := EulerPhi[n]
+
+nJordanTotient[k_Integer, n_Integer] := n^k nPrimeProduct[n, (1 - 1/#^2) &] /; k>=1 && n>0
+nJordanTotient[n_Integer] := EulerPhi[n] /; n>0
 
 nDivisors[n_,k_] := Divisors[Apply[Times, Map[#[[1]]^Floor[#[[2]]/k] &, FactorInteger[n]]]]
 nDivisors[n_]:= nDivisors[n,1]
