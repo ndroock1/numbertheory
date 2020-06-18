@@ -122,7 +122,8 @@ nEulerPhi[k_Integer, n_Integer] := DirichletConvolve[nFaulhaber[k, j], MoebiusMu
 nEulerPhi[0, n_Integer] := EulerPhi[n]
 nEulerPhi[n_Integer] := EulerPhi[n]
 
-nJordanTotient[k_Integer, n_Integer] := n^k nPrimeProduct[n, (1 - 1/#^2) &] /; k>=1 && n>0
+nJordanTotient[k_Integer, n_Integer] := 1 /; (n == 1)
+nJordanTotient[k_Integer, n_Integer] := n^k nPrimeProduct[n, (1 - 1/#^k) &] /; k>=1 && n>0
 nJordanTotient[n_Integer] := EulerPhi[n] /; n>0
 
 nDivisors[n_,k_] := Divisors[Apply[Times, Map[#[[1]]^Floor[#[[2]]/k] &, FactorInteger[n]]]]
