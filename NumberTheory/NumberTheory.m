@@ -102,6 +102,10 @@ nMultiplicativeComponent::usage =
 			"nMultiplicative Component[fun_] returns the multiplicative component 
 			of an arithmetical function."
 
+nBellSeriesCoefficient::usage=
+			"nBellSeriesCoefficient[fun_, n_] returns the value of the arithmetic function 
+			which corresponds to fun. Where fun is a function of p, or Bell Series."
+
 Begin["`Private`"]
 (* Implementation of the package *)
 nz[n_] := (-1)^(n - 1) Floor[n/2]
@@ -192,10 +196,12 @@ nAMComponents[fun_] := Module[{fM, fA},
   fA := nDirichletProduct[nDirichletInverse[fM], fun];
   {fM, fA}
   ]
-
 nMultiplicativeComponent[fun_] := nAMComponents[fun][[1]]
-
 nAntiMultiplicativeComponent[fun_] := nAMComponents[fun][[2]]
+
+nBellSeriesCoefficient[fun_, n_] := Apply[Times, 
+ Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &,
+   FactorInteger[n]]]
 
 End[]
 
