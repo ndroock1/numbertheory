@@ -89,6 +89,19 @@ nDirichletCoefficientList::usage=
 			"nDirichletCoefficientList[fun_, m_] returns the first m coefficients of D[f[n],n^s] where
 			 fun is its corresponding Zeta expression."
 
+nAMComponents::usage=
+			"nAMComponents[fun_] returns the multiplicative component and the 
+			anti-multiplicative component of an arithmetical function in a list 
+			containing {fM, fA}."
+
+nAntiMultiplicativeComponent::usage =
+			"nAntiMultiplicative Component[fun_] returns the anti-multiplicative component 
+			of an arithmetical function."
+
+nMultiplicativeComponent::usage =
+			"nMultiplicative Component[fun_] returns the multiplicative component 
+			of an arithmetical function."
+
 Begin["`Private`"]
 (* Implementation of the package *)
 nz[n_] := (-1)^(n - 1) Floor[n/2]
@@ -172,6 +185,17 @@ nDirichletCoefficientList[fun_, m_] := Module[{a, f},
         n}] // Normal, x -> \[Infinity]];
   Table[{n, a[n]}, {n, 1, m}]
   ]
+
+nAMComponents[fun_] := Module[{fM, fA},
+  fM := Function[a, 
+    Apply[Times, Map[fun[#[[1]]^#[[2]]] &, FactorInteger[a]]]];
+  fA := nDirichletProduct[nDirichletInverse[fM], fun];
+  {fM, fA}
+  ]
+
+nMultiplicativeComponent[fun_] := nAMComponents[fun][[1]]
+
+nAntiMultiplicativeComponent[fun_] := nAMComponents[fun][[2]]
 
 End[]
 
