@@ -102,6 +102,9 @@ nMultiplicativeComponent::usage =
 			"nMultiplicative Component[fun_] returns the multiplicative component 
 			of an arithmetical function."
 
+x::usage="Declaring x as an exported symbol in the X` context";
+out::usage="Declaring out as an exported symbol in the X` context";
+
 nBellSeriesCoefficient::usage=
 			"nBellSeriesCoefficient[fun_, n_] returns the value of the arithmetic function 
 			which corresponds to fun. Where fun is a function of p, or Bell Series."
@@ -199,9 +202,11 @@ nAMComponents[fun_] := Module[{fM, fA},
 nMultiplicativeComponent[fun_] := nAMComponents[fun][[1]]
 nAntiMultiplicativeComponent[fun_] := nAMComponents[fun][[2]]
 
-nBellSeriesCoefficient[fun_, n_] := Apply[Times, 
- Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &,
-   FactorInteger[n]]]
+nBellSeriesCoefficient[fun_, n_] := Module[{out}, 
+	out=Apply[Times, Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &, FactorInteger[n]]];
+	out=If[out===SeriesCoefficient[1, 1],1,Apply[Times, Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &, FactorInteger[n]]]];
+	out
+]
 
 End[]
 
