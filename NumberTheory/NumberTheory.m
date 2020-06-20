@@ -157,6 +157,7 @@ nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
 nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
 
 nDirichletProduct[f_, g_] := Function[a, DivisorSum[a, f[#] g[a/#] &]]
+nDirichletProduct[fns_List] := Fold[nDirichletProduct, First[fns], Rest[fns]] /; Length[fns] >= 2
 
 nDirichletInverse[f_][1] := 1
 nDirichletInverse[f_][n_] := -(1/f[1]) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
