@@ -149,8 +149,9 @@ nJordanTotient[n_Integer] := EulerPhi[n] /; n>0
 nDivisors[n_,k_] := Divisors[Apply[Times, Map[#[[1]]^Floor[#[[2]]/k] &, FactorInteger[n]]]]
 nDivisors[n_]:= nDivisors[n,1]
 
-nMoebiusMu[n_, 1] := MoebiusMu[n]
-nMoebiusMu[n_, k_] := Sum[nMoebiusMu[n/d^k, k - 1] nMoebiusMu[n/d, k - 1], {d, nDivisors[n, k]}]
+nMoebiusMu[k_Integer, n_Integer] := 1 /; k >= 1 && n == 1
+nMoebiusMu[k_Integer, n_Integer] := MoebiusMu[n] /; k == 1 && n > 1
+nMoebiusMu[k_Integer, n_Integer] := Sum[nMoebiusMu[k - 1, n/d^k] nMoebiusMu[k - 1, n/d], {d, nDivisors[n, k]}] /; k > 1 && n > 1
 
 nDivisorProduct[n_, f_] := Apply[Times, Map[f[#] &, Divisors[n]]]
 
