@@ -160,8 +160,8 @@ nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
 nDirichletProduct[f_, g_] := Function[a, DivisorSum[a, f[#] g[a/#] &]]
 nDirichletProduct[fns_List] := Fold[nDirichletProduct, First[fns], Rest[fns]] /; Length[fns] >= 2
 
-nDirichletInverse[f_][1] := 1
-nDirichletInverse[f_][n_] := -(1/f[1]) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
+nDirichletInverse[f_][1] := ( 1 / f[1] )
+nDirichletInverse[f_][n_] := -( 1 / f[1] ) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
 
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
 nDirichletPower[f_,k_Integer]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]] /; (k >= 0)
