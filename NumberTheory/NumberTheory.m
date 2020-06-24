@@ -173,7 +173,7 @@ nDirichletRoot[g_,m_][n_] :=
 	1/m ( g[n] - Total[Map[Apply[Times, #] &, Map[nDirichletRoot[g,m][#] &, 
 	Select[Tuples[Most[Divisors[n]], m], Apply[Times, #] == n &], {2}]]] )
 
-nDirichletCoefficient[fun_, m_] := Module[{a, f},
+nDirichletCoefficient[fun_, m_] := Module[{a, f, k},
   f[x_] := fun[x];
   a[1] = Limit[f[x], x -> \[Infinity]];
   a[n_] := 
@@ -184,7 +184,7 @@ nDirichletCoefficient[fun_, m_] := Module[{a, f},
   a[m]
   ]
 
-nDirichletCoefficientList[fun_, m_] := Module[{a, f},
+nDirichletCoefficientList[fun_, m_] := Module[{a, f, k},
   f[x_] := fun[x];
   a[1] = Limit[f[x], x -> \[Infinity]];
   a[n_] := 
@@ -204,11 +204,9 @@ nAMComponents[fun_] := Module[{fM, fA},
 nMultiplicativeComponent[fun_] := nAMComponents[fun][[1]]
 nAntiMultiplicativeComponent[fun_] := nAMComponents[fun][[2]]
 
-nBellSeriesCoefficient[fun_, n_] := Module[{out}, 
-	out=Apply[Times, Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &, FactorInteger[n]]];
-	out=If[out===SeriesCoefficient[1, 1],1,Apply[Times, Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] &, FactorInteger[n]]]];
-	out
-]
+nBellSeriesCoefficient[fun_, n_] := Apply[Times, 
+	Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] /. SeriesCoefficient[_, _] :> 1 &, 
+	FactorInteger[n]]]
 
 End[]
 
