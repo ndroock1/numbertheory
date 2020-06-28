@@ -109,6 +109,10 @@ nBellSeriesCoefficient::usage=
 			"nBellSeriesCoefficient[fun_, n_] returns the value of the arithmetic function 
 			which corresponds to fun. Where fun is a function of p, or Bell Series."
 
+nLehmerD::usage=
+			"nLehmerD[i_,n_] returns the largest divisor d of i for which n/d is
+			 prime to d."
+
 Begin["`Private`"]
 (* Implementation of the package *)
 nz[n_] := (-1)^(n - 1) Floor[n/2]
@@ -160,8 +164,8 @@ nPrimeProduct[n_,f_] := Apply[Times, Map[f[#] &, FactorInteger[n][[All, 1]]]]
 nDirichletProduct[f_, g_] := Function[a, DivisorSum[a, f[#] g[a/#] &]]
 nDirichletProduct[fns_List] := Fold[nDirichletProduct, First[fns], Rest[fns]] /; Length[fns] >= 2
 
-nDirichletInverse[f_][1] := ( 1 / f[1] )
-nDirichletInverse[f_][n_] := -( 1 / f[1] ) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]])
+nDirichletInverse[f_][1] := ( 1 / f[1] ) /; f[1]!=0
+nDirichletInverse[f_][n_] := -( 1 / f[1] ) (Apply[Plus, Map[f[n/#] nDirichletInverse[f][#] &, Most[Divisors[n]]]]) /; f[1]!=0
 
 nDirichletPower[f_,0]:=Function[a, Floor[1/a]]
 nDirichletPower[f_,k_Integer]:=Fold[nDirichletProduct, f, ConstantArray[f, k - 1]] /; (k >= 0)
@@ -207,6 +211,11 @@ nAntiMultiplicativeComponent[fun_] := nAMComponents[fun][[2]]
 nBellSeriesCoefficient[fun_, n_] := Apply[Times, 
 	Map[SeriesCoefficient[Series[fun[#[[1]]], {x, 0, #[[2]]}], #[[2]]] /. SeriesCoefficient[_, _] :> 1 &, 
 	FactorInteger[n]]]
+
+nLehmerD[i_, n_] := 0 /; Not[Divisible[n, i]]
+nLehmerD[i_, n_] := 1 /; i == 1
+nLehmerD[i_, n_] := Apply[Times, Map[#[[1]]^#[[2, 1]] &, Select[Map[{#, IntegerExponent[{i, n}, #]} &, 
+      FactorInteger[GCD[i, n]][[All, 1]]], #[[2, 1]] == #[[2, 2]] &]]] /; Divisible[n, i]
 
 End[]
 
