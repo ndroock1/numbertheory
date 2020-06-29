@@ -102,9 +102,6 @@ nMultiplicativeComponent::usage =
 			"nMultiplicative Component[fun_] returns the multiplicative component 
 			of an arithmetical function."
 
-x::usage="Declaring x as an exported symbol in the X` context";
-out::usage="Declaring out as an exported symbol in the X` context";
-
 nBellSeriesCoefficient::usage=
 			"nBellSeriesCoefficient[fun_, n_] returns the value of the arithmetic function 
 			which corresponds to fun. Where fun is a function of p, or Bell Series."
@@ -112,6 +109,13 @@ nBellSeriesCoefficient::usage=
 nLehmerD::usage=
 			"nLehmerD[i_,n_] returns the largest divisor d of i for which n/d is
 			 prime to d."
+
+nLehmerProduct::usage=
+			"nLehmerProduct[fun1_,fun2_] returns the Dirichlet Lehmer of the
+			functions f and g : f[]g."
+
+x::usage="Declaring x as an exported symbol in the X` context";
+out::usage="Declaring out as an exported symbol in the X` context";
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -192,7 +196,7 @@ nDirichletCoefficientList[fun_, m_] := Module[{a, f, k},
   f[x_] := fun[x];
   a[1] = Limit[f[x], x -> \[Infinity]];
   a[n_] := 
-   a[n] = Limit[
+  a[n] = Limit[
      Series[n^
          x (f[x] - Sum[a[k] k^-x, {k, 1, n - 1}]), {x, \[Infinity], 
         n}] // Normal, x -> \[Infinity]];
@@ -216,6 +220,14 @@ nLehmerD[i_, n_] := 0 /; Not[Divisible[n, i]]
 nLehmerD[i_, n_] := 1 /; i == 1
 nLehmerD[i_, n_] := Apply[Times, Map[#[[1]]^#[[2, 1]] &, Select[Map[{#, IntegerExponent[{i, n}, #]} &, 
       FactorInteger[GCD[i, n]][[All, 1]]], #[[2, 1]] == #[[2, 2]] &]]] /; Divisible[n, i]
+
+nLehmerProduct[fn1_, fn2_] := 
+ Function[a, 
+  Apply[Plus, 
+   Map[fn1[#[[1]]] fn2[#[[2]]] &, 
+    Map[#[[1]] &, 
+     Select[Map[{#, LCM[#[[1]], #[[2]]]} &, 
+       Tuples[Range[a], 2]], #[[2]] == a &]]]]]
 
 End[]
 
