@@ -114,6 +114,9 @@ nLehmerProduct::usage=
 			"nLehmerProduct[fun1_,fun2_] returns the Dirichlet Lehmer of the
 			functions f and g : f[]g."
 
+nLehmerM::usage=
+			"nLehmerM[k_,n_] returns the k-Lehmer inverse for n."
+
 x::usage="Declaring x as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
 
@@ -228,6 +231,10 @@ nLehmerProduct[fn1_, fn2_] :=
     Map[#[[1]] &, 
      Select[Map[{#, LCM[#[[1]], #[[2]]]} &, 
        Tuples[Range[a], 2]], #[[2]] == a &]]]]]
+
+nLehmerM[k_, 1] := 1
+nLehmerM[k_, n_] := 
+ Apply[Times, Map[(# + 1)^k - #^k &, FactorInteger[n][[All, 2]]]]
 
 End[]
 
