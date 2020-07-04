@@ -5,6 +5,7 @@
 BeginPackage["NumberTheory`"]
 
 
+
 (* UTILITIES INITIAL FROM NotesANT *)
 SetAttributes[tex, HoldFirst]
 tex[exp_] := TeXForm[HoldForm[exp]]
@@ -116,6 +117,13 @@ nLehmerProduct::usage=
 
 nLehmerM::usage=
 			"nLehmerM[k_,n_] returns the k-Lehmer inverse for n."
+
+nChebyshevTheta::usage=
+			"nChebyshevTheta[x_] returns the partial sum of Log counted over the primes."
+
+nChebyshevPsi::usage=
+			"nChebyshevPsi[x_] returns the partial sum of MangoldtLambda."
+
 
 x::usage="Declaring x as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
@@ -235,6 +243,10 @@ nLehmerProduct[fn1_, fn2_] :=
 nLehmerM[k_, 1] := 1
 nLehmerM[k_, n_] := 
  Apply[Times, Map[(# + 1)^k - #^k &, FactorInteger[n][[All, 2]]]]
+
+nChebyshevTheta[x_] := Sum[Log[k], {k, Select[Range[x], PrimeQ]}]
+
+nChebyshevPsi[X_] := Sum[MangoldtLambda[y], {y, x}] 
 
 End[]
 
