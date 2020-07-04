@@ -125,7 +125,7 @@ nChebyshevPsi::usage=
 			"nChebyshevPsi[x_] returns the partial sum of MangoldtLambda."
 
 
-x::usage="Declaring x as an exported symbol in the X` context";
+y::usage="Declaring y as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
 
 Begin["`Private`"]
@@ -246,7 +246,7 @@ nLehmerM[k_, n_] :=
 
 nChebyshevTheta[x_] := Sum[Log[k], {k, Select[Range[x], PrimeQ]}]
 
-nChebyshevPsi[X_] := Sum[MangoldtLambda[y], {y, x}] 
+nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}] 
 
 End[]
 
