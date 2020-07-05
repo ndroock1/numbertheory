@@ -246,7 +246,8 @@ nLehmerM[k_, n_] :=
 
 nChebyshevTheta[x_] := Sum[Log[k], {k, Select[Range[x], PrimeQ]}]
 
-nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}] 
+(*nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}]*) 
+nChebyshevPsi[x_] := Sum[nChebyshevTheta[x^(1/y)], {y, 1, Log[2, x]}]
 
 End[]
 
