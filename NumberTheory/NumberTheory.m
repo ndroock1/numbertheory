@@ -244,7 +244,7 @@ nLehmerM[k_, 1] := 1
 nLehmerM[k_, n_] := 
  Apply[Times, Map[(# + 1)^k - #^k &, FactorInteger[n][[All, 2]]]]
 
-nChebyshevTheta[x_] := Sum[Log[k], {k, Select[Range[x], PrimeQ]}]
+nChebyshevTheta[x_] := Sum[Log[y], {y, Select[Range[x], PrimeQ]}]
 
 (*nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}]*) 
 nChebyshevPsi[x_] := Sum[nChebyshevTheta[x^(1/y)], {y, 1, Log[2, x]}]
