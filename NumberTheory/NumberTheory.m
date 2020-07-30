@@ -42,6 +42,10 @@ nPXStatusTuple::usage =
 nPXChainRoot::usage = 
 			"nPXChainRoot[{x_, y_}] returns the root 2-tuple of such a tuple in a chain."
 
+nPXChainRootDistance::usage = 
+			"nPXChainRootDistance[{x_, y_}] returns the distance between a 2-tuple and 
+			its chain root."
+
 nPXChainUp::usage =
 			"nPXChainUp[{x_, y_}] returns true if the next 2-tuple in the chain is up."
 
@@ -172,7 +176,12 @@ nPXStatusTuple[{x_, y_}] :=
 nPXChainRoot[{p_, q_}] := Module[{a = p, b = q},
   While[nPXStatusTuple[{a, b}], {a, b} = nPXNextTuple[{a, b}]];
   {a, b}]
-nPXChainUp[{x_, y_}]:=EvenQ[IntegerExponent[nPXChainRoot[{x, y}][[1]], 2]]
+
+nPXChainRootDistance[{x_, y_}]:=IntegerExponent[x,2]-IntegerExponent[nPXChainRoot[{x, y}][[1]],2]
+
+nPXChainUp[{x_, y_}]:=EvenQ[nPXChainRootDistance[{x,y}]]
+
+
 
 nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
