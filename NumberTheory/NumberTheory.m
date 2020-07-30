@@ -42,6 +42,8 @@ nPXStatusTuple::usage =
 nPXChainRoot::usage = 
 			"nPXChainRoot[{x_, y_}] returns the root 2-tuple of such a tuple in a chain."
 
+nPXChainUp::usage =
+			"nPXChainUp[{x_, y_}] returns true if the next 2-tuple in the chain is up."
 
 (* 3X+1 Functions *)
 nCollatz::usage = 
@@ -164,7 +166,13 @@ nNaturalToQuotient[n_]:= n2Q[n]
 nQuotientToNatural[n_]:= q2N[n]
 
 nPXNextTuple[{x_, y_}]:=If[EvenQ[y], {x/2, y/2}, {x/2, (y - 1)/2}]
-
+nPXStatusTuple[{x_, y_}] := 
+ IntegerQ[nPXNextTuple[{x, y}][[1]]] && 
+  Mod[Total[{x, y}], 2] != Mod[Total[nPXNextTuple[{x, y}]], 2]
+nPXChainRoot[{p_, q_}] := Module[{a = p, b = q},
+  While[nPXStatusTuple[{a, b}], {a, b} = nPXNextTuple[{a, b}]];
+  {a, b}]
+nPXChainUp[{x_, y_}]:=EvenQ[IntegerExponent[nPXChainRoot[{x, y}][[1]], 2]]
 
 nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
