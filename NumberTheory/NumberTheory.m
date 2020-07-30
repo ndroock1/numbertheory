@@ -18,8 +18,7 @@ tr := Trace
 primeQpos[n_] := If[PrimeQ[n] && n > 0, True, False]
 
 
-
- 
+(* Cantor Bijection Functions *) 
 nNaturalToInteger::usage=
 			"nNaturalToInteger[n] maps N to Z"
 
@@ -33,15 +32,25 @@ nQuotientToNatural::usage=
 			"nQuotientToNatural[n] maps Q to N"
 
 
+(* Proof X Functions *)
+nPXNextTuple::usage =
+			"nPXNextTuple[{x_, y_}] returns the next 2-tuple down in the chain."
 
+nPXStatusTuple::usage =
+			"nPXStatusTuple[{x_, y_}] returns the status of a 2-tuple in the chain."
+
+nPXChainRoot::usage = 
+			"nPXChainRoot[{x_, y_}] returns the root 2-tuple of such a tuple in a chain."
+
+
+(* 3X+1 Functions *)
 nCollatz::usage = 
 			"nCollatz[n] gives a list of the iterates in the 3n+1 problem,
     	     starting from n. The conjecture is that this sequence always
              terminates."
 
 
-
-
+(* Arithmetical Functions *)
 nFaulhaber::usage =
 			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
 			<n."
@@ -153,6 +162,9 @@ nNaturalToInteger[n_] := nz[n]
 nIntegerToNatural[n_] := zn[n]
 nNaturalToQuotient[n_]:= n2Q[n]
 nQuotientToNatural[n_]:= q2N[n]
+
+nPXNextTuple[{x_, y_}]:=If[EvenQ[y], {x/2, y/2}, {x/2, (y - 1)/2}]
+
 
 nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
