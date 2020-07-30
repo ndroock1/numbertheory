@@ -6,7 +6,7 @@ BeginPackage["NumberTheory`"]
 
 
 
-(* UTILITIES INITIAL FROM NotesANT *)
+(* INITIAL UTILITIES FROM NotesAnaNT *)
 SetAttributes[tex, HoldFirst]
 tex[exp_] := TeXForm[HoldForm[exp]]
 nc[n_] := N[n] // Chop
@@ -19,7 +19,7 @@ primeQpos[n_] := If[PrimeQ[n] && n > 0, True, False]
 
 
 
-(* Exported symbols added here with SymbolName::usage *) 
+ 
 nNaturalToInteger::usage=
 			"nNaturalToInteger[n] maps N to Z"
 
@@ -32,10 +32,15 @@ nNaturalToQuotient::usage=
 nQuotientToNatural::usage=
 			"nQuotientToNatural[n] maps Q to N"
 
+
+
 nCollatz::usage = 
 			"nCollatz[n] gives a list of the iterates in the 3n+1 problem,
     	     starting from n. The conjecture is that this sequence always
              terminates."
+
+
+
 
 nFaulhaber::usage =
 			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
