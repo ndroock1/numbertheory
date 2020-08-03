@@ -32,22 +32,28 @@ nQuotientToNatural::usage=
 			"nQuotientToNatural[n] maps Q to N"
 
 
-(* Proof X Functions *)
-nPXNextTuple::usage =
+(* Proof X.3 Functions *)
+nPX3NextTuple::usage =
 			"nPXNextTuple[{x_, y_}] returns the next 2-tuple down in the chain."
 
-nPXStatusTuple::usage =
+nPX3PreviousTuple::usage =
+			"nPXNextTuple[{x_, y_}] returns the previous 2-tuple up in the chain."
+
+nPX3StatusTuple::usage =
 			"nPXStatusTuple[{x_, y_}] returns the status of a 2-tuple in the chain."
 
-nPXChainRoot::usage = 
+nPX3ChainRoot::usage = 
 			"nPXChainRoot[{x_, y_}] returns the root 2-tuple of such a tuple in a chain."
 
-nPXChainRootDistance::usage = 
+nPX3ChainRootDistance::usage = 
 			"nPXChainRootDistance[{x_, y_}] returns the distance between a 2-tuple and 
 			its chain root."
 
-nPXChainUp::usage =
+nPX3ChainUp::usage =
 			"nPXChainUp[{x_, y_}] returns true if the next 2-tuple in the chain is up."
+
+nPX3Move::usage =
+			"nPXChainUp[{x_, y_}] returns its sister 2-tuple"
 
 (* 3X+1 Functions *)
 nCollatz::usage = 
@@ -169,17 +175,33 @@ nIntegerToNatural[n_] := zn[n]
 nNaturalToQuotient[n_]:= n2Q[n]
 nQuotientToNatural[n_]:= q2N[n]
 
-nPXNextTuple[{x_, y_}]:=If[EvenQ[y], {x/2, y/2}, {x/2, (y - 1)/2}]
-nPXStatusTuple[{x_, y_}] := 
- IntegerQ[nPXNextTuple[{x, y}][[1]]] && 
-  Mod[Total[{x, y}], 2] != Mod[Total[nPXNextTuple[{x, y}]], 2]
-nPXChainRoot[{p_, q_}] := Module[{a = p, b = q},
-  While[nPXStatusTuple[{a, b}], {a, b} = nPXNextTuple[{a, b}]];
+
+
+nPX3NextTuple[{x_, y_}] := If[EvenQ[x],
+  If[EvenQ[y], {x/2, y/2}, {x/2, (y - 1)/2}],
+  If[EvenQ[y], {x/2, (y - 1)/2}, {x/2, y/2}]
+  ]
+
+nPX3PreviousTuple[{x_, y_}]:=If[EvenQ[x],
+	If[EvenQ[y], {2x, 2y+1}, {2x, 2y}],
+	If[EvenQ[y], {2x, 2y}, {2x, 2y+1}]
+]
+
+nPX3StatusTuple[{x_, y_}] := 
+ IntegerQ[nPX3NextTuple[{x, y}][[1]]] && 
+  Mod[Total[{x, y}], 2] != Mod[Total[nPX3NextTuple[{x, y}]], 2]
+
+nPX3ChainRoot[{p_, q_}] := Module[{a = p, b = q},
+  While[nPX3StatusTuple[{a, b}], {a, b} = nPX3NextTuple[{a, b}]];
   {a, b}]
 
-nPXChainRootDistance[{x_, y_}]:=IntegerExponent[x,2]-IntegerExponent[nPXChainRoot[{x, y}][[1]],2]
+nPX3ChainRootDistance[{x_, y_}]:=IntegerExponent[x,2]-IntegerExponent[nPX3ChainRoot[{x, y}][[1]],2]
 
-nPXChainUp[{x_, y_}]:=EvenQ[nPXChainRootDistance[{x,y}]]
+nPX3ChainUp[{x_, y_}]:=EvenQ[nPX3ChainRootDistance[{x,y}]]
+
+nPX3Move[{x_, y_}] := 
+ If[nPX3ChainUp[{x, y}], nPX3PreviousTuple[{x, y}], 
+  nPX3NextTuple[{x, y}]]
 
 
 
