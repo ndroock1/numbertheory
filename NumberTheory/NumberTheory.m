@@ -32,29 +32,6 @@ nQuotientToNatural::usage=
 			"nQuotientToNatural[n] maps Q to N"
 
 
-(* Proof X.3 Functions *)
-nPX3NextTuple::usage =
-			"nPXNextTuple[{x_, y_}] returns the next 2-tuple down in the chain."
-
-nPX3PreviousTuple::usage =
-			"nPXNextTuple[{x_, y_}] returns the previous 2-tuple up in the chain."
-
-nPX3StatusTuple::usage =
-			"nPXStatusTuple[{x_, y_}] returns the status of a 2-tuple in the chain."
-
-nPX3ChainRoot::usage = 
-			"nPXChainRoot[{x_, y_}] returns the root 2-tuple of such a tuple in a chain."
-
-nPX3ChainRootDistance::usage = 
-			"nPXChainRootDistance[{x_, y_}] returns the distance between a 2-tuple and 
-			its chain root."
-
-nPX3ChainUp::usage =
-			"nPXChainUp[{x_, y_}] returns true if the next 2-tuple in the chain is up."
-
-nPX3Move::usage =
-			"nPXChainUp[{x_, y_}] returns its sister 2-tuple"
-
 (* 3X+1 Functions *)
 nCollatz::usage = 
 			"nCollatz[n] gives a list of the iterates in the 3n+1 problem,
@@ -151,6 +128,20 @@ nChebyshevPsi::usage=
 			"nChebyshevPsi[x_] returns the partial sum of MangoldtLambda."
 
 
+(* Complex Analysis Functions *)
+cPath::usage=
+			"cPath[n_] returns an n-Gon."
+
+cPlotPath::usage=
+			"cPlotPath[path_ , options___] returns an n-Gon graphic."
+
+cContourIntegral::usage=
+			"cContourIntegral[expr_, vbl_, contour_] returns the contour integral."
+
+cNContourIntegral::usage=
+			"cNContourIntegral[expr_, vbl_, contour_] returns the numeric contour integral."
+
+
 y::usage="Declaring y as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
 
@@ -177,37 +168,11 @@ nQuotientToNatural[n_]:= q2N[n]
 
 
 
-nPX3NextTuple[{x_, y_}] := If[EvenQ[x],
-  If[EvenQ[y], {x/2, y/2}, {x/2, (y - 1)/2}],
-  If[EvenQ[y], {x/2, (y - 1)/2}, {x/2, y/2}]
-  ]
-
-nPX3PreviousTuple[{x_, y_}]:=If[EvenQ[x],
-	If[EvenQ[y], {2x, 2y+1}, {2x, 2y}],
-	If[EvenQ[y], {2x, 2y}, {2x, 2y+1}]
-]
-
-nPX3StatusTuple[{x_, y_}] := 
- IntegerQ[nPX3NextTuple[{x, y}][[1]]] && 
-  Mod[Total[{x, y}], 2] != Mod[Total[nPX3NextTuple[{x, y}]], 2]
-
-nPX3ChainRoot[{p_, q_}] := Module[{a = p, b = q},
-  While[nPX3StatusTuple[{a, b}], {a, b} = nPX3NextTuple[{a, b}]];
-  {a, b}]
-
-nPX3ChainRootDistance[{x_, y_}]:=IntegerExponent[x,2]-IntegerExponent[nPX3ChainRoot[{x, y}][[1]],2]
-
-nPX3ChainUp[{x_, y_}]:=EvenQ[nPX3ChainRootDistance[{x,y}]]
-
-nPX3Move[{x_, y_}] := 
- If[nPX3ChainUp[{x, y}], nPX3PreviousTuple[{x, y}], 
-  nPX3NextTuple[{x, y}]]
-
-
-
 nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
 nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
+
+
 
 nCore[n_Integer] := Apply[Times, FactorInteger[n][[All, 1]]]
 
@@ -305,6 +270,21 @@ nChebyshevTheta[x_] := Sum[Log[y], {y, Select[Range[x], PrimeQ]}]
 (*nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}]*) 
 nChebyshevPsi[x_] := Sum[nChebyshevTheta[x^(1/y)], {y, 1, Log[2, x]}]
 
+
+
+cPath[n_] := Table[Exp[2*I*Pi*k/n], {k, 0, n}]
+
+cPlotPath[path_ , options___] :=
+ Module[{argand = Map[{Re[#], Im[#]} &, path]}, 
+  grdata = {Line[argand], {PointSize[0.03],  Map[Point, argand]}};
+  Show[Graphics[grdata, AspectRatio -> 1,  Axes -> True, options]]]
+
+cContourIntegral[expr_, vbl_, contour_] :=
+ 	Integrate[expr, Prepend[contour, vbl]]
+
+cNContourIntegral[expr_, vbl_, contour_] :=
+ 	NIntegrate[expr, Evaluate[ Prepend[contour, vbl]]]
+ 	
 End[]
 
 EndPackage[]
