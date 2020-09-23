@@ -39,6 +39,12 @@ nCollatz::usage =
              terminates."
 
 
+(* Algebraic Number Theory Functions *)
+nGaussianToIdealForm::usage =
+			"nGaussianToIdealForm[z] returns a 3 element list representing 
+			the Ideal Form g[a:k] as {g,a,k}"
+
+
 (* Arithmetical Functions *)
 nFaulhaber::usage =
 			"nFaulhaber[k,n] returns the sum om the kth powers of the numbers
@@ -171,6 +177,19 @@ nQuotientToNatural[n_]:= q2N[n]
 nCollatz[1] := {1}
 nCollatz[n_Integer] := Prepend[nCollatz[3 n + 1], n] /; OddQ[n] && n > 0
 nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
+
+
+
+nGaussianToIdealForm[z_] /; IntegerQ[Re[z]] && IntegerQ[Im[z]] && Im[z]!=0 :=Module[
+	{q, r, g, a, k},
+	g=GCD[Re[z],Im[z]];
+	q=Re[z]/g;
+	r=Im[z]/g;
+	a=q^2+r^2;
+	k=Solve[q k == -r, k, Modulus -> a][[1, 1, 2]];
+	k=If[k > (a/2), k-a, k];
+	{g, a, k}
+  ]
 
 
 
