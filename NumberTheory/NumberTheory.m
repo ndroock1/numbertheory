@@ -180,15 +180,20 @@ nCollatz[n_Integer] := Prepend[nCollatz[n/2], n] /; EvenQ[n] && n > 0
 
 
 
-nGaussianToIdealForm[z_] /; IntegerQ[Re[z]] && IntegerQ[Im[z]] && Im[z]!=0 :=Module[
-	{q, r, g, a, k},
+nGaussianToIdealForm[z_] /; IntegerQ[Re[z]] && IntegerQ[Im[z]] :=Module[
+	{q, r, g, a, k, out},
 	g=GCD[Re[z],Im[z]];
 	q=Re[z]/g;
 	r=Im[z]/g;
 	a=q^2+r^2;
+	
+	If[r!=0,
 	k=Solve[q k == -r, k, Modulus -> a][[1, 1, 2]];
 	k=If[k > (a/2), k-a, k];
-	{g, a, k}
+	out={g,a,k}
+	,
+	out={Re[z],1,0}];
+	out
   ]
 
 
