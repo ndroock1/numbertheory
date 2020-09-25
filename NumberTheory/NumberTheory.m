@@ -209,7 +209,7 @@ nIdealFormToGaussian[idfm_List] /; (Mod[idfm[[3]]^2 + 1, idfm[[2]]] == 0 ) := Mo
    		lsa = Append[lsa, (lsk[[j]]^2 + 1)/lsa[[j]]];
    		lsk = Append[lsk, Mod[-lsk[[j]], lsa[[j + 1]]]];
    		j = j + 1];
-  	Apply[Times, Table[1/lsa[[k + 1]] (lsk[[k]] + I), {k, 1, j - 1}]]
+  	Apply[Times, Table[1/lsa[[k + 1]] (lsk[[k]] + I), {k, 1, j - 1}]]*idfm[[1]]
   ]
 
 
