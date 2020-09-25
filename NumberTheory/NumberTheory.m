@@ -44,6 +44,10 @@ nGaussianToIdealForm::usage =
 			"nGaussianToIdealForm[z] returns a 3 element list representing 
 			the Ideal Form g[a:k] as {g,a,k}"
 
+nIdealFormToGaussian::usage =
+			"nIdealFormToGausian[ls] 3 element list representing  the Ideal 
+			{g,a,k} returns a representing associate Gaussian Integer."
+
 
 (* Arithmetical Functions *)
 nFaulhaber::usage =
@@ -194,6 +198,18 @@ nGaussianToIdealForm[z_] /; IntegerQ[Re[z]] && IntegerQ[Im[z]] :=Module[
 	,
 	out={Re[z],1,0}];
 	out
+  ]
+
+nIdealFormToGaussian[idfm_List] /; (Mod[idfm[[3]]^2 + 1, idfm[[2]]] == 0 ) := Module[
+  	{lsa, lsk, j},
+  	lsa = {idfm[[2]]};
+  	lsk = {idfm[[3]]};
+  	j = 1;
+  	While[lsk[[j]] != 0,
+   		lsa = Append[lsa, (lsk[[j]]^2 + 1)/lsa[[j]]];
+   		lsk = Append[lsk, Mod[-lsk[[j]], lsa[[j + 1]]]];
+   		j = j + 1];
+  	Apply[Times, Table[1/lsa[[k + 1]] (lsk[[k]] + I), {k, 1, j - 1}]]
   ]
 
 
