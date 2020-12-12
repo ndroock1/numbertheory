@@ -1,4 +1,0 @@
-Dit is een test.
-Second line.
-A
-B
