@@ -1,2 +1,2 @@
 # numbertheory
-Mathematica Package for Number Theory
+Mathematica Package for Number Theory.
