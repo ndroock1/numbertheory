@@ -38,7 +38,7 @@ nCollatz::usage =
     	     starting from n. The conjecture is that this sequence always
              terminates."
 
-
+(*===REMOVE ???===*)
 (* Algebraic Number Theory Functions *)
 nGaussianToIdealForm::usage =
 			"nGaussianToIdealForm[z] returns a 3 element list representing 
@@ -152,6 +152,12 @@ cNContourIntegral::usage=
 			"cNContourIntegral[expr_, vbl_, contour_] returns the numeric contour integral."
 
 
+(* Modular Forms related Functions*)
+nEisensteinG2K::usage=
+			"nEisensteinG2K[k_, t_] returns the sum of the Eisenstein Series."
+
+
+(*===WHAT IS THIS===???*)
 y::usage="Declaring y as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
 
@@ -324,6 +330,11 @@ cContourIntegral[expr_, vbl_, contour_] :=
 
 cNContourIntegral[expr_, vbl_, contour_] :=
  	NIntegrate[expr, Evaluate[ Prepend[contour, vbl]]]
+
+
+nEisensteinG2K[2, t_]=WeierstrassInvariantG2[{1/2, t/2}]/60;
+nEisensteinG2K[3, t_]=WeierstrassInvariantG3[{1/2, t/2}]/140;
+nEisensteinG2K[m_, t_]:= 3 Sum[(2 r - 1) (2 m - 2 r - 1) nEisensteinG2K[r, t] nEisensteinG2K[m - r, t], {r, 2, m - 2}]/((2 m + 1) (m - 3) (2 m - 1))
  	
 End[]
 
