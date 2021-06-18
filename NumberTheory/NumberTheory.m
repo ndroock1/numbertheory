@@ -137,6 +137,12 @@ nChebyshevTheta::usage=
 nChebyshevPsi::usage=
 			"nChebyshevPsi[x_] returns the partial sum of MangoldtLambda."
 
+nDivisorSigma::usage=
+			"nDivisorSigma[k_,n_] returns the sum of the k-th powers of the divisors of n. 
+			The domain of this function is extended to the non-negative integers."
+
+nCauchyProduct::usage =
+			"nCauchyProduct[f_,g_] returns the Cauchy Product of the functions f and g."
 
 (* Complex Analysis Functions *)
 cPath::usage=
@@ -316,6 +322,11 @@ nChebyshevTheta[x_] := Sum[Log[y], {y, Select[Range[x], PrimeQ]}]
 (*nChebyshevPsi[x_] := Sum[MangoldtLambda[y], {y, x}]*) 
 nChebyshevPsi[x_] := Sum[nChebyshevTheta[x^(1/y)], {y, 1, Log[2, x]}]
 
+nDivisorSigma[n_]:=nDivisorSigma[1,n]
+nDivisorSigma[k_,0]:=1/2 Zeta[-k]
+nDivisorSigma[k_,n_]:=DivisorSigma[k,n]
+
+nCauchyProduct[f_, g_] := Function[a, Sum[f[k] g[a - k], {k, 0, a}]] 
 
 
 cPath[n_] := Table[Exp[2*I*Pi*k/n], {k, 0, n}]
