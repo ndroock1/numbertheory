@@ -351,8 +351,8 @@ nEisensteinG2KTEMP[m_, t_]:= 3 Sum[(2 r - 1) (2 m - 2 r - 1) nEisensteinG2K[r, t
 
 nEisensteinG2K[2, t_]=nEisensteinG2K[2, {1, t}];
 nEisensteinG2K[3, t_]=nEisensteinG2K[3, {1, t}];
-nEisensteinG2K[2, {w1_, w3_}]=WeierstrassInvariantG2[{w1/2, w3/2}]/60;
-nEisensteinG2K[3, {w1_, w3_}]=WeierstrassInvariantG3[{w1/2, w3/2}]/140;
+nEisensteinG2K[2, {w1_, w3_}]:=WeierstrassInvariantG2[{w1/2, w3/2}]/60;
+nEisensteinG2K[3, {w1_, w3_}]:=WeierstrassInvariantG3[{w1/2, w3/2}]/140;
 nEisensteinG2K[m_, {w1_, w3_}]:= 3 Sum[(2 r - 1) (2 m - 2 r - 1) nEisensteinG2K[r, {w1, w3}] nEisensteinG2K[m - r, {w1, w3}], {r, 2, m - 2}]/((2 m + 1) (m - 3) (2 m - 1))
 
  	
