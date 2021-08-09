@@ -3,6 +3,15 @@
 (* Created by the Wolfram Workbench 10-Jun-2020 *)
 
 BeginPackage["NumberTheory`"]
+(*===WHAT IS THIS===???*)
+y::usage="Declaring y as an exported symbol in the X` context";
+out::usage="Declaring out as an exported symbol in the X` context";
+n::usage="Declaring out as an exported symbol in the X` context";
+tf::usage="Declaring out as an exported symbol in the X` context";
+mf::usage="Declaring out as an exported symbol in the X` context";
+y::usage="Declaring out as an exported symbol in the X` context";
+out::usage="Declaring out as an exported symbol in the X` context";
+out$::usage="Declaring out as an exported symbol in the X` context";
 
 
 
@@ -162,10 +171,6 @@ cNContourIntegral::usage=
 nEisensteinG2K::usage=
 			"nEisensteinG2K[k_, t_], nEisensteinG2K[k_, {w1_, w3_}] returns the sum of the Eisenstein Series."
 
-
-(*===WHAT IS THIS===???*)
-y::usage="Declaring y as an exported symbol in the X` context";
-out::usage="Declaring out as an exported symbol in the X` context";
 
 Begin["`Private`"]
 (* Implementation of the package *)
