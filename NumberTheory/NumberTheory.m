@@ -4,6 +4,7 @@
 
 BeginPackage["NumberTheory`"]
 (*===WHAT IS THIS===???*)
+x::usage="Declaring y as an exported symbol in the X` context";
 y::usage="Declaring y as an exported symbol in the X` context";
 out::usage="Declaring out as an exported symbol in the X` context";
 n::usage="Declaring out as an exported symbol in the X` context";
