@@ -1,7 +1,6 @@
 (* Wolfram Language Package *)
 
-
-(* Created by the Wolfram Workbench 10-Jun-2020 *)
+(* Created by the Wolfram Workbench 10/6-'20 *)
 
 BeginPackage["NumberTheory`"]
 (*===WHAT IS THIS===???*)
