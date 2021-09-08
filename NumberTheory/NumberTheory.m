@@ -174,6 +174,9 @@ cNContourIntegral::usage=
 nEisensteinG2K::usage=
 			"nEisensteinG2K[k_, t_], nEisensteinG2K[k_, {w1_, w3_}] returns the sum of the Eisenstein Series."
 
+nEisensteinG::usage=
+			"nEisensteinG[k_, t_], nEisensteinG[k_, {w1_, w3_}] returns the sum of the Eisenstein Series."
+
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -350,6 +353,12 @@ cContourIntegral[expr_, vbl_, contour_] :=
 cNContourIntegral[expr_, vbl_, contour_] :=
  	NIntegrate[expr, Evaluate[ Prepend[contour, vbl]]]
 
+
+nEisensteinG[4, {w1_, w3_}] = WeierstrassInvariantG2[{w1, w3}]/60;
+nEisensteinG[6, {w1_, w3_}] = WeierstrassInvariantG3[{w1, w3}]/140;
+nEisensteinG[4, t_] = nEisensteinG[4, {1, t}];
+nEisensteinG[6, t_] = nEisensteinG[6, {1, t}];
+nEisensteinG[m_, {w1_, w3_}] :=  3 Sum[( r - 1) (m - r - 1) nEisensteinG[r, {w1, w3}] nEisensteinG[m - r, {w1, w3}], {r, 4, m - 4, 2}]/(( m + 1) (m/2 - 3) ( m - 1))
 
 
 (*
