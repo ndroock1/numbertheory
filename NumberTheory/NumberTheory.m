@@ -361,11 +361,11 @@ nEisensteinG[6, t_] = nEisensteinG[6, {1, t}];
 nEisensteinG[m_, {w1_, w3_}] :=  3 Sum[( r - 1) (m - r - 1) nEisensteinG[r, {w1, w3}] nEisensteinG[m - r, {w1, w3}], {r, 4, m - 4, 2}]/(( m + 1) (m/2 - 3) ( m - 1))
 
 
-(*
+
 nEisensteinG2KTEMP[2, t_]=WeierstrassInvariantG2[{1/2, t/2}]/60;
 nEisensteinG2KTEMP[3, t_]=WeierstrassInvariantG3[{1/2, t/2}]/140;
 nEisensteinG2KTEMP[m_, t_]:= 3 Sum[(2 r - 1) (2 m - 2 r - 1) nEisensteinG2K[r, t] nEisensteinG2K[m - r, t], {r, 2, m - 2}]/((2 m + 1) (m - 3) (2 m - 1))
-*)
+
 
 nEisensteinG2K[2, {w1_, w3_}]=WeierstrassInvariantG2[{w1/2, w3/2}]/60;
 nEisensteinG2K[3, {w1_, w3_}]=WeierstrassInvariantG3[{w1/2, w3/2}]/140;
