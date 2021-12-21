@@ -18,7 +18,7 @@ out$::usage="Declaring out as an exported symbol in the X` context";
 
 
 
-(* INITIAL UTILITIES FROM NotesAnaNT *)
+(* INITIAL UTILITIES FROM NotesAnaNT??? *)
 SetAttributes[tex, HoldFirst]
 tex[exp_] := TeXForm[HoldForm[exp]]
 nc[n_] := N[n] // Chop
@@ -44,7 +44,7 @@ nQuotientToNatural::usage=
 			"nQuotientToNatural[n] maps Q to N"
 
 
-(* 3X+1 Functions *)
+(* 3X+1 Functions as follows *)
 nCollatz::usage = 
 			"nCollatz[n] gives a list of the iterates in the 3n+1 problem,
     	     starting from n. The conjecture is that this sequence always
